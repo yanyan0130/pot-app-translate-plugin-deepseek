@@ -1,0 +1,88 @@
+{
+    "id": "plugin.com.deepseek",
+    "plugin_type": "translate",
+    "icon": "deepseek.svg",
+    "display": "DeepSeek",
+    "homepage": "https://github.com/yanyan0130/pot-app-translate-plugin-deepseek",
+    "needs":[
+        {
+            "key": "model",
+            "display": "模型名称",
+            "type": "input",
+            "default": "deepseek-v4-pro"
+        },
+        {
+            "key": "apiKey",
+            "display": "API密钥",
+            "type": "input"
+        },
+        {
+            "key": "thinking",
+            "display": "思考模式",
+            "type": "select",
+            "options": {
+                "true": "开启",
+                "false": "关闭"
+            },
+            "default": "true"
+        },
+        {
+            "key": "reasoning_effort",
+            "display": "思考强度",
+            "type": "select",
+            "options": {
+                "high": "High",
+                "max": "Max"
+            },
+            "default": "high"
+        },
+        {
+            "key": "show_thinking",
+            "display": "思考过程",
+            "type": "select",
+            "options": {
+                "true": "显示",
+                "false": "关闭"
+            },
+            "default": "ture"
+        },
+        {
+            "key": "stream",
+            "display": "流式输出",
+            "type": "select",
+            "options": {
+                "true": "开启",
+                "false": "关闭"
+            },
+            "default": "true"
+        }
+    ],
+    "language": {
+        "auto": "auto",
+        "zh_cn": "zh",
+        "zh_tw": "zh_HANT",
+        "en": "en",
+        "ja": "ja",
+        "ko": "ko",
+        "fr": "fr",
+        "es": "es",
+        "ru": "ru",
+        "de": "de",
+        "it": "it",
+        "tr": "tr",
+        "pt_pt": "pt",
+        "pt_br": "pt",
+        "vi": "vi",
+        "id": "id",
+        "th": "th",
+        "ms": "ms",
+        "ar": "ar",
+        "hi": "hi",
+        "mn_cy": "mn",
+        "mn_mo": "mn",
+        "km": "km",
+        "nb_no": "no",
+        "nn_no": "no",
+        "fa": "fa"
+    }
+}
