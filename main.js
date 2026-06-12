@@ -37,11 +37,11 @@ async function translate(text, from, to, options) {
             }
         ],
         stream: isStream,
-        temperature: 0.1,
-        top_p: 0.99,
+        temperature: 1,
+        top_p: 1,
         frequency_penalty: 0,
         presence_penalty: 0,
-        max_tokens: 2000
+        max_tokens: 60000
     };
     
     // 配置 V4 API 思考模式参数
@@ -54,11 +54,17 @@ async function translate(text, from, to, options) {
 
     // 处理【流式请求】逻辑
     if (isStream) {
+        // 【关键修复】：利用 Controller 设置 999 秒的超长超时，防止后台长思考导致的断连
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 999 * 1000);
+
         try {
             const res = await globalThis.fetch(requestPath, {
                 method: 'POST',
                 headers: headers,
-                body: JSON.stringify(body)
+                body: JSON.stringify(body),
+                signal: controller.signal,
+                timeout: 999 // 显式兼容部分拦截器参数
             });
 
             if (!res.ok) {
@@ -70,7 +76,7 @@ async function translate(text, from, to, options) {
             const decoder = new TextDecoder("utf-8");
             let targetText = "";
             let reasoningText = "";
-            let finalOutputText = ""; // 提取到外部，用于最终返回
+            let finalOutputText = ""; 
             let buffer = "";
 
             while (true) {
@@ -118,9 +124,11 @@ async function translate(text, from, to, options) {
                     }
                 }
             }
-            // 循环结束后，必须返回积累的最终文本，否则 Pot 会用空字符覆盖掉刚渲染好的内容
+            // 结束时务必清除计时器
+            clearTimeout(timeoutId);
             return finalOutputText;
         } catch (error) {
+            clearTimeout(timeoutId);
             // 静默拦截异常，优雅降级为非流式处理
             body.stream = false;
         }
@@ -131,6 +139,7 @@ async function translate(text, from, to, options) {
         method: 'POST',
         url: requestPath,
         headers: headers,
+        timeout: 999, // 【关键修复】：确保原生的 Tauri 请求也配置 999s 的超时容忍
         body: {
             type: "Json",
             payload: body
